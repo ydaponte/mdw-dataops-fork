@@ -1,0 +1,9 @@
+{
+	"name": "mdwdops-adf-dev-ys08",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "73407e8d-e773-4604-bfb0-7ade0430660f",
+		"tenantId": "e2a315a1-b592-4c7e-b921-066f5d6ef97d"
+	}
+}
