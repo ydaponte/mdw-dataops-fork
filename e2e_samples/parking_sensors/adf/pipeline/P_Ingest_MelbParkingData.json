@@ -95,9 +95,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "RestSource",
-						"httpRequestTimeout": "00:01:40",
-						"requestInterval": "00.00:00:00.010"
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureBlobFSSink"
@@ -106,7 +111,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Ds_REST_MelbParkingData",
+						"referenceName": "Ds_Http_Parking_Bay",
 						"type": "DatasetReference"
 					}
 				],
@@ -146,9 +151,14 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "RestSource",
-						"httpRequestTimeout": "00:01:40",
-						"requestInterval": "00.00:00:00.010"
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureBlobFSSink"
@@ -157,11 +167,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Ds_REST_MelbParkingData",
-						"type": "DatasetReference",
-						"parameters": {
-							"relativeurl": "wuf8-susg.json"
-						}
+						"referenceName": "Ds_Http_Parking_Bay",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
