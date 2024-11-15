@@ -206,7 +206,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/notebooks/03_transform",
+					"notebookPath": "/Users/yennifer.santos@mngenvmcap841869.onmicrosoft.com/03_transform.py",
 					"baseParameters": {
 						"loadid": {
 							"value": "@pipeline().RunId",
