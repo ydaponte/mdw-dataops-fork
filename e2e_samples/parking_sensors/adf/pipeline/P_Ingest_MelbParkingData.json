@@ -107,10 +107,7 @@
 				"inputs": [
 					{
 						"referenceName": "Ds_REST_MelbParkingData",
-						"type": "DatasetReference",
-						"parameters": {
-							"relativeurl": "dtpv-d4pf.json"
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
