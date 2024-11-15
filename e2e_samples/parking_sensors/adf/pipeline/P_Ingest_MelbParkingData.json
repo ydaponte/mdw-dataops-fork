@@ -30,7 +30,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/notebooks/02_standardize",
+					"notebookPath": "/Users/yennifer.santos@mngenvmcap841869.onmicrosoft.com/02_standardize.py",
 					"baseParameters": {
 						"infilefolder": {
 							"value": "@variables('infilefolder')",
