@@ -9,6 +9,7 @@ jobs:
     pythonVersion: 3.8
   steps:
   - script: |
+      sudo apt-get remove -y libodbc2
       curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
       sudo bash -c "curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list"
       sudo apt-get update
