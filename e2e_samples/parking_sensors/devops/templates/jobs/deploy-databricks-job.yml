@@ -22,8 +22,9 @@ jobs:
           displayName: 'Use Python Version: $(pythonVersion)'
 
         - script: |
-            wget https://github.com/databricks/cli/releases/download/v0.234.0/databricks_cli_0.234.0_linux_amd64.zip -O databricks_cli.zip
+            wget https://github.com/databricks/cli/releases/download/v0.233.0/databricks_cli_0.233.0_linux_amd64.zip -O databricks_cli.zip
             unzip databricks_cli.zip -d /usr/local/bin  
+            echo "Installed $("databricks" -v) 
           displayName: 'Install Databricks CLI'
 
         - script: |
