@@ -59,6 +59,7 @@
 			},
 			{
 				"name": "Set infilefolder",
+				"description": "Hei there!",
 				"type": "SetVariable",
 				"dependsOn": [],
 				"policy": {
