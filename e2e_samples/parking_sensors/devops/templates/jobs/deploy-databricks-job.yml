@@ -22,9 +22,19 @@ jobs:
           displayName: 'Use Python Version: $(pythonVersion)'
 
         - script: |
-            python -m pip install --upgrade pip
-            pip install databricks-cli
-          displayName: 'Setup Agent'
+            tmpdir="$(mktemp -d)"
+            wget -q https://github.com/databricks/cli/releases/download/v$VERSION/$FILE.zip -O /$tmpdir/${FILE}.zip
+            cd /$tmpdir && sha256sum ${FILE}.zip > /$tmpdir/${FILE}.zip.sha256
+            cd /$tmpdir 
+            sha256sum -c ${FILE}.zip.sha256
+            if [ $? -ne 0 ]; then
+              echo "Checksum validation failed. Exiting."
+              exit 1
+            else
+              echo "Checksum validation succeeded."
+            fi
+            unzip -q /$tmpdir/${FILE}.zip
+          displayName: 'Install Databricks CLI'
 
         - script: |
             packageWheelName=$(ls ${WHEEL_FILE_PATH} | grep '^ddo_transform.*.whl$' | head -n 1)
