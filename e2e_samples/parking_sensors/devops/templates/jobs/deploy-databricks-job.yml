@@ -22,18 +22,8 @@ jobs:
           displayName: 'Use Python Version: $(pythonVersion)'
 
         - script: |
-            tmpdir="$(mktemp -d)"
-            wget -q https://github.com/databricks/cli/releases/download/v$VERSION/$FILE.zip -O /$tmpdir/${FILE}.zip
-            cd /$tmpdir && sha256sum ${FILE}.zip > /$tmpdir/${FILE}.zip.sha256
-            cd /$tmpdir 
-            sha256sum -c ${FILE}.zip.sha256
-            if [ $? -ne 0 ]; then
-              echo "Checksum validation failed. Exiting."
-              exit 1
-            else
-              echo "Checksum validation succeeded."
-            fi
-            unzip -q /$tmpdir/${FILE}.zip
+            wget https://github.com/databricks/cli/releases/download/v0.234.0/databricks_cli_0.234.0_linux_amd64.zip -O databricks_cli.zip
+            unzip databricks_cli.zip -d /usr/local/bin  
           displayName: 'Install Databricks CLI'
 
         - script: |
