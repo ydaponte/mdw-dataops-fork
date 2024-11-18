@@ -9,19 +9,19 @@
 		},
 		"P_Ingest_MelbParkingData_properties_0_typeProperties_notebookPath": {
 			"type": "string",
-			"defaultValue": "/notebooks/02_standardize"
+			"defaultValue": "/Users/yennifer.santos@mngenvmcap841869.onmicrosoft.com/02_standardize.py"
 		},
 		"P_Ingest_MelbParkingData_properties_0_typeProperties_0_egg": {
 			"type": "string",
-			"defaultValue": "dbfs:/mnt/datalake/sys/databricks/libs/ddo_transform-localdev-py2.py3-none-any.whl"
+			"defaultValue": "dbfs:/ddo_transform-localdev-py2.py3-none-any.whl"
 		},
 		"P_Ingest_MelbParkingData_properties_4_typeProperties_notebookPath": {
 			"type": "string",
-			"defaultValue": "/notebooks/03_transform"
+			"defaultValue": "/Users/yennifer.santos@mngenvmcap841869.onmicrosoft.com/03_transform.py"
 		},
 		"P_Ingest_MelbParkingData_properties_4_typeProperties_0_egg": {
 			"type": "string",
-			"defaultValue": "dbfs:/mnt/datalake/sys/databricks/libs/ddo_transform-localdev-py2.py3-none-any.whl"
+			"defaultValue": "dbfs:/ddo_transform-localdev-py2.py3-none-any.whl"
 		},
 		"Ds_AdlsGen2_MelbParkingData_properties_typeProperties_fileName": {
 			"type": "string",
@@ -47,13 +47,17 @@
 			"type": "string",
 			"defaultValue": "sqldwConnectionString"
 		},
+		"Ls_Http_Parking_Bay_01_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/"
+		},
 		"Ls_KeyVault_01_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://mdwdops-kv-dev-ys08.vault.azure.net/"
 		},
 		"Ls_Rest_MelParkSensors_01_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://data.melbourne.vic.gov.au/resource/"
+			"defaultValue": "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/"
 		}
 	},
 	"variables": {
@@ -159,9 +163,14 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010"
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
 							},
 							"sink": {
 								"type": "AzureBlobFSSink"
@@ -170,11 +179,9 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Ds_REST_MelbParkingData",
+								"referenceName": "Ds_Http_Parking_Bay",
 								"type": "DatasetReference",
-								"parameters": {
-									"relativeurl": "dtpv-d4pf.json"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
@@ -213,9 +220,14 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010"
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
 							},
 							"sink": {
 								"type": "AzureBlobFSSink"
@@ -224,11 +236,9 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Ds_REST_MelbParkingData",
+								"referenceName": "Ds_Http_Parking_Bay_Sensors",
 								"type": "DatasetReference",
-								"parameters": {
-									"relativeurl": "wuf8-susg.json"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
@@ -340,8 +350,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Ls_AzureDatabricks_01')]",
-				"[concat(variables('factoryId'), '/datasets/Ds_REST_MelbParkingData')]",
+				"[concat(variables('factoryId'), '/datasets/Ds_Http_Parking_Bay')]",
 				"[concat(variables('factoryId'), '/datasets/Ds_AdlsGen2_MelbParkingData')]",
+				"[concat(variables('factoryId'), '/datasets/Ds_Http_Parking_Bay_Sensors')]",
 				"[concat(variables('factoryId'), '/linkedServices/Ls_AzureSQLDW_01')]"
 			]
 		},
@@ -385,6 +396,55 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Ls_AdlsGen2_01')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ds_Http_Parking_Bay')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Ls_Http_Parking_Bay_01",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "on-street-parking-bays/exports/json",
+							"type": "Expression"
+						}
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Ls_Http_Parking_Bay_01')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ds_Http_Parking_Bay_Sensors')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Ls_Http_Parking_Bay_01",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "on-street-parking-bay-sensors/exports/json"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Ls_Http_Parking_Bay_01')]"
 			]
 		},
 		{
@@ -439,12 +499,12 @@
 					"domain": "[parameters('Ls_AzureDatabricks_01_properties_typeProperties_domain')]",
 					"authentication": "MSI",
 					"workspaceResourceId": "[parameters('Ls_AzureDatabricks_01_properties_typeProperties_workspaceResourceId')]",
-					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNodeType": "Standard_DC4as_v5",
 					"newClusterNumOfWorker": "1",
 					"newClusterSparkEnvVars": {
 						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
 					},
-					"newClusterVersion": "10.4.x-scala2.12",
+					"newClusterVersion": "13.3.x-scala2.12",
 					"clusterOption": "Fixed",
 					"newClusterInitScripts": []
 				}
@@ -472,6 +532,21 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Ls_KeyVault_01')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ls_Http_Parking_Bay_01')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('Ls_Http_Parking_Bay_01_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Ls_KeyVault_01')]",
