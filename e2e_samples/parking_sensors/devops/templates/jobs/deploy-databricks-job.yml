@@ -48,6 +48,7 @@ jobs:
             # Create JSON file for library installation
             temp_dir=$(mktemp -d)
             json_file="$temp_dir/libs.config.json"
+            echo "$json_file"
             cat <<EOF > $json_file
             {
               "cluster_id": ${{ parameters.dbclusterid }},
