@@ -51,7 +51,7 @@ jobs:
             echo "$json_file"
             cat <<EOF > $json_file
             {
-              "cluster_id": ${{ parameters.dbclusterid }},
+              "cluster_id": "${{ parameters.dbclusterid }}",
               "libraries": [
                 {
                   "whl": "dbfs:/ddo_transform-localdev-py2.py3-none-any.whl"
