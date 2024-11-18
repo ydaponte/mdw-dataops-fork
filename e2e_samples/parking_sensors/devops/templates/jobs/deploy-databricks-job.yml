@@ -1,6 +1,8 @@
 parameters:
 - name: environmentName
   type: string
+- name: dbclusterid
+  type: string
 
 jobs:
 - deployment: deploy_databricks
@@ -39,6 +41,21 @@ jobs:
             databricks fs cp --recursive --overwrite "${WHEEL_FILE_PATH}/${WHEEL_FILE_NAME}" "${DBFS_LIBS_PATH}/${WHEEL_FILE_NAME}"
             echo "Uploading notebooks at ${NOTEBOOKS_PATH} to workspace (${DATABRICKS_NOTEBOOK_PATH})..."
             databricks workspace import_dir --recursive --overwrite "${NOTEBOOKS_PATH}" "${DATABRICKS_NOTEBOOK_PATH}"
+            # Create JSON file for library installation
+            json_file="./databricks/config/libs.config.json"
+            cat <<EOF > $json_file
+            {
+              "cluster_id": ${{ parameters.dbclusterid }},
+              "libraries": [
+                {
+                  "whl": "dbfs:/ddo_transform-localdev-py2.py3-none-any.whl"
+                }
+              ]
+            }
+            EOF
+            
+            # Install library on the cluster using the JSON file
+            databricks libraries install --json @$json_file
           env:
             DATABRICKS_HOST: $(databricksDomain)
             DATABRICKS_TOKEN: $(databricksToken)
