@@ -50,7 +50,7 @@ jobs:
             fi
             unzip databricks_cli.zip -d /usr/local/bin  
             echo "Installed $("databricks" -v)"
-           displayName: 'Install Databricks CLI and 
+           displayName: 'Install Databricks CLI'
         - script: |      
             echo "Uploading app libraries to DBFS..."
             echo "Uploading SOURCE whl file: ${WHEEL_FILE_PATH}/${WHEEL_FILE_NAME} to dbfs DESTINATION: ${DBFS_LIBS_PATH}/${WHEEL_FILE_NAME}"
@@ -87,4 +87,4 @@ jobs:
             NOTEBOOKS_PATH: $(Pipeline.Workspace)/ciartifacts/databricks/notebooks
             DATABRICKS_NOTEBOOK_PATH: $(databricksNotebookPath)
             DATABRICKS_CONFIG_PATH: $(Pipeline.Workspace)/ciartifacts/config
-          displayName: 'Install Databricks CLI and Deploy notebooks and packages'
+          displayName: 'Deploy notebooks and packages'
