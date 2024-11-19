@@ -73,4 +73,4 @@ jobs:
             DATABRICKS_CONFIG_PATH: $(Pipeline.Workspace)/ciartifacts/config
             DATABRICKS_FILE: databricks_cli_0.233.0_linux_amd64.zip
             DATABRICKS_VERSION: 0.233.0
-          displayName: 'Deploy notebooks and packages'
+          displayName: 'Install Databricks CLI, deploy notebooks and packages'
