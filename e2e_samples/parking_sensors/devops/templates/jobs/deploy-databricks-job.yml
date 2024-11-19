@@ -33,7 +33,6 @@ jobs:
           displayName: 'Set packageWheelName variable'
 
         - script: |
-            
             wget https://github.com/databricks/cli/releases/download/v${DATABRICKS_VERSION}/${DATABRICKS_FILE} -O databricks_cli.zip
             unzip databricks_cli.zip -d /usr/local/bin  
             echo "Installed $("databricks" -v)"
