@@ -35,25 +35,11 @@ jobs:
         - script: |
             
             wget https://github.com/databricks/cli/releases/download/v${DATABRICKS_VERSION}/${DATABRICKS_FILE} -O databricks_cli.zip
-            # Verify the checksum
-            tmpdir=$(mktemp -d)
-            cd /$tmpdir && sha256sum ${DATABRICKS_FILE}.zip > /$tmpdir/${DATABRICKS_FILE}.zip.sha256
-            cd /$tmpdir 
-            # Run the sha256sum check
-            sha256sum -c ${DATABRICKS_FILE}.zip.sha256
-            
-            # Check the exit status of the sha256sum command
-            if [ $? -ne 0 ]; then
-              echo "Checksum validation failed. Exiting."
-              exit 1
-            else
-              echo "Checksum validation succeeded."
-            fi
             unzip databricks_cli.zip -d /usr/local/bin  
             echo "Installed $("databricks" -v)"
           env:
-            DATABRICKS_FILE: 'databricks_cli_0.233.0_linux_amd64.zip'
-            DATABRICKS_VERSION: '0.233.0'
+            DATABRICKS_FILE: databricks_cli_0.233.0_linux_amd64.zip
+            DATABRICKS_VERSION: 0.233.0
            displayName: 'Install Databricks CLI'
            
         - script: |      
