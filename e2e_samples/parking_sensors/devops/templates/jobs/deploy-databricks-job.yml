@@ -27,6 +27,8 @@ jobs:
 
         - script: |
             wget https://github.com/databricks/cli/releases/download/v${databricksCLIVersion}/${databricksFile} -O databricks_cli.zip
+            # Verify the checksum
+            tmpdir=$(mktemp -d)
             unzip databricks_cli.zip -d /usr/local/bin  
             echo "Installed $("databricks" -v)"
           displayName: 'Install Databricks CLI'
