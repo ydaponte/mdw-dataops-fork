@@ -35,7 +35,7 @@ jobs:
             wget -q https://github.com/databricks/cli/releases/download/v$(databricksCLIVersion)/$(databricksFile).zip -O /$tmpdir/$(databricksFile).zip
             
             # Verify the checksum
-            cd /$tmpdir && sha256sum ${databricksFile}.zip > /$tmpdir/$(databricksFile).zip.sha256
+            cd /$tmpdir && sha256sum $(databricksFile).zip > /$tmpdir/$(databricksFile).zip.sha256
             cd /$tmpdir 
             # Run the sha256sum check
             sha256sum -c $(databricksFile).zip.sha256
