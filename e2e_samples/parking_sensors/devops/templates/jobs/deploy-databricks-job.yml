@@ -32,13 +32,13 @@ jobs:
             echo "tempdir: $tmpdir"
             
             # Download release archive.
-            wget -q https://github.com/databricks/cli/releases/download/v$databricksCLIVersion/$databricksFile.zip -O /$tmpdir/${databricksFile}.zip
+            wget -q https://github.com/databricks/cli/releases/download/v$(databricksCLIVersion)/$(databricksFile).zip -O /$tmpdir/$(databricksFile).zip
             
             # Verify the checksum
-            cd /$tmpdir && sha256sum ${databricksFile}.zip > /$tmpdir/${databricksFile}.zip.sha256
+            cd /$tmpdir && sha256sum ${databricksFile}.zip > /$tmpdir/$(databricksFile).zip.sha256
             cd /$tmpdir 
             # Run the sha256sum check
-            sha256sum -c ${databricksFile}.zip.sha256
+            sha256sum -c $(databricksFile).zip.sha256
             
             # Check the exit status of the sha256sum command
             if [ $? -ne 0 ]; then
@@ -49,7 +49,7 @@ jobs:
             fi
             
             # Unzip the downloaded file
-            unzip -q /$tmpdir/${databricksFile}.zip #-d /home/mdwuser/databricks
+            unzip -q /$tmpdir/$(databricksFile).zip
             
             # Add databricks to path.
             chmod +x ./databricks
@@ -58,7 +58,7 @@ jobs:
             echo "Installed $("databricks" -v) at /usr/local/bin/databricks."
             
             # Clean up the zip file and checksum
-            rm /$tmpdir/${databricksFile}.zip /$tmpdir/${databricksFile}.zip.sha256
+            rm /$tmpdir/$(databricksFile).zip /$tmpdir/$(databricksFile).zip.sha256
             
             # Clean up temporary directory.
             cd "$OLDPWD"
