@@ -11,6 +11,8 @@ jobs:
     vmImage: 'ubuntu-latest'
   variables:
     pythonVersion: 3.8
+    databricksFile: databricks_cli_0.233.0_linux_amd64.zip
+    databricksCLIVersion: 0.233.0
   environment: ${{ parameters.environmentName }}
   strategy:
     runOnce:
@@ -24,6 +26,11 @@ jobs:
           displayName: 'Use Python Version: $(pythonVersion)'
 
         - script: |
+            wget https://github.com/databricks/cli/releases/download/v${databricksCLIVersion}/${databricksFile} -O databricks_cli.zip
+            unzip databricks_cli.zip -d /usr/local/bin  
+            echo "Installed $("databricks" -v)"
+          displayName: 'Install Databricks CLI'
+        - script: |
             packageWheelName=$(ls ${WHEEL_FILE_PATH} | grep '^ddo_transform.*.whl$' | head -n 1)
             echo "Package wheel name is: $packageWheelName"
             echo "##vso[task.setvariable variable=packageWheelName;isOutput=true]$packageWheelName"
@@ -33,9 +40,6 @@ jobs:
           displayName: 'Set packageWheelName variable'
 
         - script: |
-            wget https://github.com/databricks/cli/releases/download/v${DATABRICKS_VERSION}/${DATABRICKS_FILE} -O databricks_cli.zip
-            unzip databricks_cli.zip -d /usr/local/bin  
-            echo "Installed $("databricks" -v)"
             echo "Uploading app libraries to DBFS..."
             echo "Uploading SOURCE whl file: ${WHEEL_FILE_PATH}/${WHEEL_FILE_NAME} to dbfs DESTINATION: ${DBFS_LIBS_PATH}/${WHEEL_FILE_NAME}"
             databricks fs cp --recursive --overwrite "${WHEEL_FILE_PATH}/${WHEEL_FILE_NAME}" "${DBFS_LIBS_PATH}/${WHEEL_FILE_NAME}"
@@ -71,6 +75,4 @@ jobs:
             NOTEBOOKS_PATH: $(Pipeline.Workspace)/ciartifacts/databricks/notebooks
             DATABRICKS_NOTEBOOK_PATH: $(databricksNotebookPath)
             DATABRICKS_CONFIG_PATH: $(Pipeline.Workspace)/ciartifacts/config
-            DATABRICKS_FILE: databricks_cli_0.233.0_linux_amd64.zip
-            DATABRICKS_VERSION: 0.233.0
-          displayName: 'Install Databricks CLI, deploy notebooks and packages'
+          displayName: 'Deploy notebooks and packages'
