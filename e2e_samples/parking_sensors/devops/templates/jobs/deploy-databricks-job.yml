@@ -30,8 +30,8 @@ jobs:
             wget https://github.com/databricks/cli/releases/download/v${databricksCLIVersion}/${databricksFile} -O /$tmpdir/databricks_cli.zip
             # Verify the checksum
             cd /$tmpdir
-            sha256sum databricks_cli.zip > /$tmpdir/databricks_cli.zip.sha256
-            sha256sum -c ${FILE}.zip.sha256
+            sha256sum databricks_cli.zip > databricks_cli.zip.sha256
+            sha256sum -c databricks.zip.sha256
             # Check the exit status of the sha256sum command
             if [ $? -ne 0 ]; then
               echo "Checksum validation failed. Exiting."
@@ -39,7 +39,7 @@ jobs:
             else
               echo "Checksum validation succeeded."
             fi
-            unzip -q /$tmpdir/databricks_cli.zip
+            unzip -q databricks_cli.zip
             echo "Installed $("databricks" -v)"
           displayName: 'Install Databricks CLI'
         - script: |
