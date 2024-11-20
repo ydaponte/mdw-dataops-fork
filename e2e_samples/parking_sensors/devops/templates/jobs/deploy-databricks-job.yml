@@ -11,7 +11,7 @@ jobs:
     vmImage: 'ubuntu-latest'
   variables:
     pythonVersion: 3.8
-    databricksFile: databricks_cli_0.233.0_linux_amd64.zip
+    databricksFile: databricks_cli_0.233.0_linux_amd64
     databricksCLIVersion: 0.233.0
   environment: ${{ parameters.environmentName }}
   strategy:
@@ -26,12 +26,20 @@ jobs:
           displayName: 'Use Python Version: $(pythonVersion)'
 
         - script: |
-            tmpdir=$(mktemp -d)
-            wget https://github.com/databricks/cli/releases/download/v${databricksCLIVersion}/${databricksFile} -O /$tmpdir/databricks_cli.zip
+            # Change into temporary directory.
+            tmpdir="$(mktemp -d)"
+            cd "$tmpdir"
+            echo "tempdir: $tmpdir"
+            
+            # Download release archive.
+            wget -q https://github.com/databricks/cli/releases/download/v$databricksCLIVersion/$databricksFile.zip -O /$tmpdir/${databricksFile}.zip
+            
             # Verify the checksum
-            cd /$tmpdir
-            sha256sum databricks_cli.zip > databricks_cli.zip.sha256
-            sha256sum -c databricks.zip.sha256
+            cd /$tmpdir && sha256sum ${databricksFile}.zip > /$tmpdir/${databricksFile}.zip.sha256
+            cd /$tmpdir 
+            # Run the sha256sum check
+            sha256sum -c ${databricksFile}.zip.sha256
+            
             # Check the exit status of the sha256sum command
             if [ $? -ne 0 ]; then
               echo "Checksum validation failed. Exiting."
@@ -39,8 +47,23 @@ jobs:
             else
               echo "Checksum validation succeeded."
             fi
-            unzip -q databricks_cli.zip
-            echo "Installed $("databricks" -v)"
+            
+            # Unzip the downloaded file
+            unzip -q /$tmpdir/${databricksFile}.zip #-d /home/mdwuser/databricks
+            
+            # Add databricks to path.
+            chmod +x ./databricks
+            cp ./databricks "/usr/local/bin"
+            
+            echo "Installed $("databricks" -v) at /usr/local/bin/databricks."
+            
+            # Clean up the zip file and checksum
+            rm /$tmpdir/${databricksFile}.zip /$tmpdir/${databricksFile}.zip.sha256
+            
+            # Clean up temporary directory.
+            cd "$OLDPWD"
+            rm -rf "$tmpdir" || true
+            echo "Cleaned up $tmpdir."
           displayName: 'Install Databricks CLI'
         - script: |
             packageWheelName=$(ls ${WHEEL_FILE_PATH} | grep '^ddo_transform.*.whl$' | head -n 1)
