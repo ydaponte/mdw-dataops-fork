@@ -30,7 +30,10 @@ stages:
     parameters:
       environmentName: 'DEV'
       serviceConnection: 'mdwdops-serviceconnection-dev'
-
+  - template: templates/jobs/deploy-adf-job.yml
+    parameters:
+      environmentName: 'DEV'
+      serviceConnection: 'mdwdops-serviceconnection-dev'
 - stage: deploy_to_stg
   displayName: 'Deploy to Stage'
   variables:
