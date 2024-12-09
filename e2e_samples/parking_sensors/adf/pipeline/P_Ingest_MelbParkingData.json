@@ -5,7 +5,7 @@
 		"activities": [
 			{
 				"name": "StandardizeData",
-				"description": "This is my change",
+				"description": "This is my change - v2",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
