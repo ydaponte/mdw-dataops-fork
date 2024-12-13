@@ -1,0 +1,5 @@
+CREATE USER ['$('ADFMSI')] FROM EXTERNAL PROVIDER;
+GO
+
+EXEC sp_addrolemember db_owner,['$(ADFMSI)'];
+GO
