@@ -12,9 +12,16 @@ Post-Deployment Script Template
 
 :setvar ADLSLocation ADLSLocation
 :setvar ADLSCredentialKey ADLSCredentialKey
+:setvar ADFMSI ADFMSI
 
 ALTER EXTERNAL DATA SOURCE [AzureDataLakeStorage] SET LOCATION = '$(ADLSLocation)';
 GO
 
 ALTER DATABASE SCOPED CREDENTIAL [ADLSCredentialKey] WITH IDENTITY = N'user', SECRET = '$(ADLSCredentialKey)';  
 GO 
+
+CREATE USER ['$('ADFMSI')] FROM EXTERNAL PROVIDER;
+GO
+
+EXEC sp_addrolemember db_owner,['$(ADFMSI)'];
+GO
