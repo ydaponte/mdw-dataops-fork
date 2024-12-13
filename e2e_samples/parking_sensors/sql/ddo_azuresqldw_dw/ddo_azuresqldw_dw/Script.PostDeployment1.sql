@@ -20,8 +20,8 @@ GO
 ALTER DATABASE SCOPED CREDENTIAL [ADLSCredentialKey] WITH IDENTITY = N'user', SECRET = '$(ADLSCredentialKey)';  
 GO 
 
-CREATE USER ['$('ADFMSI')] FROM EXTERNAL PROVIDER;
+CREATE USER '$('ADFMSI') FROM EXTERNAL PROVIDER;
 GO
 
-EXEC sp_addrolemember db_owner,['$(ADFMSI)'];
+EXEC sp_addrolemember db_owner,'$(ADFMSI)';
 GO
