@@ -1,5 +1,5 @@
-CREATE USER ['$(ADFMSI)'] FROM EXTERNAL PROVIDER;
+CREATE USER '$(ADFMSI)' FROM EXTERNAL PROVIDER;
 GO
 
-EXEC sp_addrolemember db_owner,['$(ADFMSI)'];
+EXEC sp_addrolemember db_owner,'$(ADFMSI)';
 GO
