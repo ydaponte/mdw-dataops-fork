@@ -101,6 +101,11 @@
     </Build>
   </ItemGroup>
   <ItemGroup>
+    <SqlCmdVariable Include="ADFMSI">
+      <DefaultValue>
+      </DefaultValue>
+      <Value>$(SqlCmdVar__3)</Value>
+    </SqlCmdVariable>
     <SqlCmdVariable Include="ADLSCredentialKey">
       <DefaultValue>
       </DefaultValue>
