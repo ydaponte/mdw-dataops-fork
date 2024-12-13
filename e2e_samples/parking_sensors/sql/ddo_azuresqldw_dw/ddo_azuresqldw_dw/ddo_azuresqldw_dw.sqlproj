@@ -87,6 +87,7 @@
     </Build>
     <Build Include="External Resources\AzureDataLakeStorage.sql" />
     <Build Include="Security\ADLSCredentialKey.sql" />
+    <Build Include="Security\CreateADFMSIUser.sql" />
     <Build Include="Security\MasterKeys.sql" />
     <Build Include="dbo\Tables\dim_date.sql" />
     <Build Include="dbo\Tables\dim_time.sql" />
