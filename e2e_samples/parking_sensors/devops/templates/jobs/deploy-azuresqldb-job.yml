@@ -20,11 +20,11 @@ jobs:
         - task: SqlAzureDacpacDeployment@1
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
-            AuthenticationType: 'aadAuthenticationPassword'
+            AuthenticationType: 'aadServicePrincipal'
             ServerName: $(sqlsrvrName).database.windows.net
             DatabaseName: $(sqlDwDatabaseName)
-            aadSqlUsername: '$(sqlsrvrUsername)'
-            aadSqlPassword: '$(sqlsrvrPassword)'
+            SqlUsername: '$(sqlsrvrUsername)'
+            SqlPassword: '$(sqlsrvrPassword)'
             deployType: 'DacpacTask'
             DacpacFile: '$(Pipeline.Workspace)/ciartifacts/sql_dw_dacpac/$(sqlProjName).dacpac'
             AdditionalArguments: '/Variables:ADLSLocation=abfss://datalake@$(datalakeAccountName).dfs.core.windows.net /Variables:ADLSCredentialKey=$(datalakeKey)'
