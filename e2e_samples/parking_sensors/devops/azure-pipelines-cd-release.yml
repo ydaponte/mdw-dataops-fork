@@ -27,6 +27,7 @@ stages:
       environmentName: 'DEV'
       serviceConnection: 'mdwdops-serviceconnection-dev'
       tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
+      resourceGroupName: 'mdwdops-ys900-dev-rg'
 - stage: deploy_to_stg
   displayName: 'Deploy to Stage'
   variables:
@@ -38,3 +39,4 @@ stages:
       environmentName: 'STG'
       serviceConnection: 'mdwdops-serviceconnection-stg'
       tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
+      resourceGroupName: 'mdwdops-ys900-dev-rg'
