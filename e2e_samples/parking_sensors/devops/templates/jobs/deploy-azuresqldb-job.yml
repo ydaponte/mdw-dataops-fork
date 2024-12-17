@@ -33,9 +33,9 @@ jobs:
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
             AuthenticationType: 'aadServicePrincipal'
-            ServerName: $(sqlsrvrName).database.windows.net
-            DatabaseName: $(sqlDwDatabaseName)
-            SqlUsername : '$(sqlsrvrUsername)'
+            ServerName: 'mdwdops-sql-dev-ys900.database.windows.net'
+            DatabaseName: 'mdwdops-syndp-dev-ys900'
+            SqlUsername : 'ac33638b-dc2f-4761-8a04-1e953da633ab'
             SqlPassword: '$(accessToken)'
             deployType: 'DacpacTask'
             DacpacFile: '$(Pipeline.Workspace)/ciartifacts/sql_dw_dacpac/$(sqlProjName).dacpac'
