@@ -28,15 +28,21 @@ jobs:
             scriptType: 'ps'
             scriptLocation: 'inlineScript'
             inlineScript: |
-              az login --service-principal -u $(sqlsrvrUsername) -p $(sqlsrvrPassword) --tenant $(tenantId)
+              Install-Module -Name AzureAD -Force -Scope CurrentUser
+              Import-Module AzureAD
+      
+              Connect-AzureAD -TenantId $env:tenantId -ApplicationId $(sqlsrvrUsername) -CertificateThumbprint $(sqlsrvrPassword)
+      
               # Get the managed identity principal ID
-              $serverIdentity = az sql server show --name $(sqlsrvrName) --resource-group $(resourceGroupName) --query identity.principalId --output tsv
-              # Add Directory Readers role eligibility
-              az role assignment create --assignee $serverIdentity --role "Directory Readers" --scope / --role-assignment-state Eligible --reason "Automated assignment" --expiration "2024-12-31T23:59:59Z"
-              # Activate the Directory Readers role if PIM is enabled
-              $roleAssignment = az role assignment list --assignee $serverIdentity --role "Directory Readers" --query "[].{id:id}" --output tsv
-              if (-not $roleAssignment) {
-                az role assignment create --assignee $serverIdentity --role "Directory Readers"
+              $serverIdentity = (Get-AzSqlServer -ResourceGroupName $(resourceGroupName) -ServerName $(sqlsrvrName)).Identity.PrincipalId
+      
+              # Check if the Directory Readers role is already assigned
+              $roleDefinition = Get-AzureADDirectoryRole | Where-Object { $_.DisplayName -eq "Directory Readers" }
+              $existingAssignment = Get-AzureADMSPrivilegedRoleAssignment | Where-Object { $_.RoleId -eq $roleDefinition.ObjectId -and $_.PrincipalId -eq $serverIdentity }
+      
+              if (-not $existingAssignment) {
+                # Add Directory Readers role eligibility with expiration
+                New-AzureADMSPrivilegedRoleAssignmentRequest -RoleId $roleDefinition.ObjectId -PrincipalId $serverIdentity -AssignmentState "Eligible" -Reason "Automated assignment" -Schedule @{ "startDateTime" = (Get-Date).ToString("o"); "endDateTime" = (Get-Date -Year 2024 -Month 12 -Day 31).ToString("o") }
               } else {
                 Write-Host "Directory Readers role is already assigned."
               }
