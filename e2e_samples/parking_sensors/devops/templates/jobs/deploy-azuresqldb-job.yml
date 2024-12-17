@@ -31,11 +31,19 @@ jobs:
               az login --service-principal -u $(sqlsrvrUsername) -p $(sqlsrvrPassword) --tenant $(tenantId)
               # Get the managed identity principal ID
               $serverIdentity = az sql server show --name $(sqlsrvrName) --resource-group $(resourceGroupName) --query identity.principalId --output tsv
-              # Assign the Directory Readers role
-              az role assignment create --assignee $serverIdentity --role "Directory Readers"
+              # Add Directory Readers role eligibility
+              az role assignment create --assignee $serverIdentity --role "Directory Readers" --scope / --role-assignment-state Eligible --reason "Automated assignment" --expiration "2024-12-31T23:59:59Z"
+              # Activate the Directory Readers role if PIM is enabled
+              $roleAssignment = az role assignment list --assignee $serverIdentity --role "Directory Readers" --query "[].{id:id}" --output tsv
+              if (-not $roleAssignment) {
+                az role assignment create --assignee $serverIdentity --role "Directory Readers"
+              } else {
+                Write-Host "Directory Readers role is already assigned."
+              }
               $accessToken = az account get-access-token --resource https://database.windows.net/ --query accessToken --output tsv
               Write-Host "##vso[task.setvariable variable=accessToken]$accessToken"
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
+        displayName: 'Setup Role Assignments'
         - task: AzureCLI@2
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
@@ -64,6 +72,7 @@ jobs:
               $sqlCommand.ExecuteNonQuery()
       
               $sqlConnection.Close()
+          displayName: 'Execute SQL Commands'
         - task: SqlAzureDacpacDeployment@1
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
