@@ -36,19 +36,18 @@ jobs:
             scriptLocation: 'inlineScript'
             inlineScript: |
               $accessToken = "$(accessToken)"
-      
               # Connect to the database and run the SQL commands
               $sqlConnection = New-Object System.Data.SqlClient.SqlConnection
-              $sqlConnection.ConnectionString = "Server=tcp:$(sqlsrvrName).database.windows.net,1433;Database=$(sqlDwDatabaseName);Authentication=Active Directory Access Token;Access Token=$accessToken"
+              $sqlConnection.ConnectionString = "Server=tcp:$(sqlsrvrName).database.windows.net,1433;Database=$(sqlDwDatabaseName);"
+              $sqlConnection.AccessToken = $accessToken
               $sqlConnection.Open()
-      
+        
               $sqlCommand = $sqlConnection.CreateCommand()
               $sqlCommand.CommandText = @"
               CREATE USER [$(sqlsrvrUsername)@$(tenantId)] FROM EXTERNAL PROVIDER;
               ALTER ROLE db_owner ADD MEMBER [$(sqlsrvrUsername)@$(tenantId)];
               "@
               $sqlCommand.ExecuteNonQuery()
-      
               $sqlConnection.Close()
         - task: SqlAzureDacpacDeployment@1
           inputs:
