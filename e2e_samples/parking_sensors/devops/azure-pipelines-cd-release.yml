@@ -27,28 +27,14 @@ stages:
       environmentName: 'DEV'
       serviceConnection: 'mdwdops-serviceconnection-dev'
       tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
-  - template: templates/jobs/deploy-adf-job.yml
-    parameters:
-      environmentName: 'DEV'
-      serviceConnection: 'mdwdops-serviceconnection-dev'
 - stage: deploy_to_stg
   displayName: 'Deploy to Stage'
   variables:
   - group: mdwdops-release-stg
   - group: mdwdops-secrets-stg
   jobs: 
-  - template: templates/jobs/deploy-databricks-job.yml
-    parameters:
-      environmentName: 'STG'
-      dbclusterid: $(databricksClusterId)
   - template: templates/jobs/deploy-azuresqldb-job.yml
     parameters:
       environmentName: 'STG'
       serviceConnection: 'mdwdops-serviceconnection-stg'
       tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
-  - template: templates/jobs/deploy-adf-job.yml
-    parameters:
-      environmentName: 'STG'
-      serviceConnection: 'mdwdops-serviceconnection-stg'
-  # Integration tests
-  - template: templates/jobs/integration-tests-job.yml
