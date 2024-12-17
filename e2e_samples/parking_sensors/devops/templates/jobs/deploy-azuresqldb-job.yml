@@ -42,8 +42,8 @@ jobs:
               }
               $accessToken = az account get-access-token --resource https://database.windows.net/ --query accessToken --output tsv
               Write-Host "##vso[task.setvariable variable=accessToken]$accessToken"
-        # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
-        displayName: 'Setup Role Assignments'
+              # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
+          displayName: 'Setup Role Assignments'
         - task: AzureCLI@2
           inputs:
             azureSubscription: ${{ parameters.serviceConnection }}
