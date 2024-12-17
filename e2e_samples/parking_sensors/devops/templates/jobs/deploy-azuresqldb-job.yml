@@ -28,13 +28,13 @@ jobs:
             scriptType: 'ps'
             scriptLocation: 'inlineScript'
             inlineScript: |
-              Install-Module -Name AzureAD -Force -Scope CurrentUser
-                Import-Module AzureAD
+                Install-Module -Name Microsoft.Graph -Scope CurrentUser -Force
+                Import-Module Microsoft.Graph
         
                 $tenantId = "${{ parameters.tenantId }}"
                 $clientId = "$(sqlsrvrUsername)"
                 $clientSecret = "$(sqlsrvrPassword)"
-                $resource = "https://graph.windows.net/"
+                $resource = "https://graph.microsoft.com/"
                 $authority = "https://login.microsoftonline.com/$tenantId"
         
                 # Get the access token
@@ -42,13 +42,13 @@ jobs:
                     grant_type    = "client_credentials"
                     client_id     = $clientId
                     client_secret = $clientSecret
-                    resource      = $resource
+                    scope         = "https://graph.microsoft.com/.default"
                 }
-                $response = Invoke-RestMethod -Method Post -Uri "$authority/oauth2/token" -ContentType "application/x-www-form-urlencoded" -Body $body
+                $response = Invoke-RestMethod -Method Post -Uri "$authority/oauth2/v2.0/token" -ContentType "application/x-www-form-urlencoded" -Body $body
                 $accessToken = $response.access_token
         
-                # Connect to Azure AD
-                Connect-AzureAD -AadAccessToken $accessToken
+                # Connect to Microsoft Graph
+                Connect-MgGraph -AccessToken $accessToken
         
                 # Get the managed identity principal ID
                 $serverIdentity = (Get-AzSqlServer -ResourceGroupName $(resourceGroupName) -ServerName $(sqlsrvrName)).Identity.PrincipalId
