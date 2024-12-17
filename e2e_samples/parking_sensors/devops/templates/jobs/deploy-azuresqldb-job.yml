@@ -3,7 +3,7 @@ parameters:
   type: string
 - name: serviceConnection
   type: string
-- name: tenant-id
+- name: tenantId
   type: string
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
   variables:
     sqlProjName: ddo_azuresqldw_dw
   environment: ${{ parameters.environmentName }}
-  tenantId:  ${{ parameters.tenant-id }}
+  tenantId:  ${{ parameters.tenantId }}
   strategy:
     runOnce:
       deploy:
