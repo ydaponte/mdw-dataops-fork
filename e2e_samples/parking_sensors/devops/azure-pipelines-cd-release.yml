@@ -26,7 +26,7 @@ stages:
     parameters:
       environmentName: 'DEV'
       serviceConnection: 'mdwdops-serviceconnection-dev'
-      tenant-id: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
+      tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
   - template: templates/jobs/deploy-adf-job.yml
     parameters:
       environmentName: 'DEV'
@@ -45,6 +45,7 @@ stages:
     parameters:
       environmentName: 'STG'
       serviceConnection: 'mdwdops-serviceconnection-stg'
+      tenantId: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
   - template: templates/jobs/deploy-adf-job.yml
     parameters:
       environmentName: 'STG'
