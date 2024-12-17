@@ -28,7 +28,6 @@ jobs:
               az login --service-principal -u $(sqlsrvrUsername) -p $(sqlsrvrPassword) --tenant $(tenantId)
               $accessToken = az account get-access-token --resource https://database.windows.net/ --query accessToken --output tsv
               Write-Host "##vso[task.setvariable variable=accessToken]$accessToken"
-              Write-Host "##vso[task.setvariable variable=databaseName]$(sqlDwDatabaseName)"
         # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
         - task: SqlAzureDacpacDeployment@1
           inputs:
@@ -37,7 +36,7 @@ jobs:
             ServerName: $(sqlsrvrName).database.windows.net
             DatabaseName: $(sqlDwDatabaseName)
             SqlUsername : '$(sqlsrvrUsername)'
-            SqlPassword: $(accessToken)
+            SqlPassword: '$(accessToken)'
             deployType: 'DacpacTask'
             DacpacFile: '$(Pipeline.Workspace)/ciartifacts/sql_dw_dacpac/$(sqlProjName).dacpac'
             AdditionalArguments: '/Variables:ADLSLocation=abfss://datalake@$(datalakeAccountName).dfs.core.windows.net /Variables:ADLSCredentialKey=$(datalakeKey)'
