@@ -29,25 +29,46 @@ jobs:
             scriptLocation: 'inlineScript'
             inlineScript: |
               Install-Module -Name AzureAD -Force -Scope CurrentUser
-              Import-Module AzureAD
-      
-              Connect-AzureAD -TenantId $env:tenantId -ApplicationId $(sqlsrvrUsername) -CertificateThumbprint $(sqlsrvrPassword)
-      
-              # Get the managed identity principal ID
-              $serverIdentity = (Get-AzSqlServer -ResourceGroupName $(resourceGroupName) -ServerName $(sqlsrvrName)).Identity.PrincipalId
-      
-              # Check if the Directory Readers role is already assigned
-              $roleDefinition = Get-AzureADDirectoryRole | Where-Object { $_.DisplayName -eq "Directory Readers" }
-              $existingAssignment = Get-AzureADMSPrivilegedRoleAssignment | Where-Object { $_.RoleId -eq $roleDefinition.ObjectId -and $_.PrincipalId -eq $serverIdentity }
-      
-              if (-not $existingAssignment) {
-                # Add Directory Readers role eligibility with expiration
-                New-AzureADMSPrivilegedRoleAssignmentRequest -RoleId $roleDefinition.ObjectId -PrincipalId $serverIdentity -AssignmentState "Eligible" -Reason "Automated assignment" -Schedule @{ "startDateTime" = (Get-Date).ToString("o"); "endDateTime" = (Get-Date -Year 2024 -Month 12 -Day 31).ToString("o") }
-              } else {
-                Write-Host "Directory Readers role is already assigned."
-              }
-              $accessToken = az account get-access-token --resource https://database.windows.net/ --query accessToken --output tsv
-              Write-Host "##vso[task.setvariable variable=accessToken]$accessToken"
+                Import-Module AzureAD
+        
+                $tenantId = "${{ parameters.tenantId }}"
+                $clientId = "$(sqlsrvrUsername)"
+                $clientSecret = "$(sqlsrvrPassword)"
+                $resource = "https://graph.windows.net/"
+                $authority = "https://login.microsoftonline.com/$tenantId"
+        
+                # Get the access token
+                $body = @{
+                    grant_type    = "client_credentials"
+                    client_id     = $clientId
+                    client_secret = $clientSecret
+                    resource      = $resource
+                }
+                $response = Invoke-RestMethod -Method Post -Uri "$authority/oauth2/token" -ContentType "application/x-www-form-urlencoded" -Body $body
+                $accessToken = $response.access_token
+        
+                # Connect to Azure AD
+                Connect-AzureAD -AadAccessToken $accessToken
+        
+                # Get the managed identity principal ID
+                $serverIdentity = (Get-AzSqlServer -ResourceGroupName $(resourceGroupName) -ServerName $(sqlsrvrName)).Identity.PrincipalId
+        
+                # Check if the Directory Readers role is already assigned
+                $roleDefinition = Get-AzureADDirectoryRole | Where-Object { $_.DisplayName -eq "Directory Readers" }
+                $existingAssignment = Get-AzureADMSPrivilegedRoleAssignment | Where-Object { $_.RoleId -eq $roleDefinition.ObjectId -and $_.PrincipalId -eq $serverIdentity }
+        
+                if (-not $existingAssignment) {
+                  # Add Directory Readers role eligibility with expiration
+                  New-AzureADMSPrivilegedRoleAssignmentRequest -RoleId $roleDefinition.ObjectId -PrincipalId $serverIdentity -AssignmentState "Eligible" -Reason "Automated assignment" -Schedule @{ "startDateTime" = (Get-Date).ToString("o"); "endDateTime" = (Get-Date -Year 2024 -Month 12 -Day 31).ToString("o") }
+                } else {
+                  Write-Host "Directory Readers role is already assigned."
+                }
+
+              # Get the access token for SQL Database
+              $sqlAccessToken = (az account get-access-token --resource https://database.windows.net/ --query accessToken --output tsv)
+              Write-Host "Access Token: $sqlAccessToken"
+              Write-Host "##vso[task.setvariable variable=accessToken]$sqlAccessToken"
+              Write-Host "##vso[task.setvariable variable=databaseName]$(sqlDwDatabaseName)"
               # https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/sql-azure-dacpac-deployment?view=azure-devops
           displayName: 'Setup Role Assignments'
         - task: AzureCLI@2
