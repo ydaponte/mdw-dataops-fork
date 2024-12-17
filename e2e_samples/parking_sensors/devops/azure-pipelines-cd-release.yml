@@ -22,14 +22,11 @@ stages:
   - group: mdwdops-release-dev
   - group: mdwdops-secrets-dev
   jobs:
-  - template: templates/jobs/deploy-databricks-job.yml
-    parameters:
-      environmentName: 'DEV'
-      dbclusterid: $(databricksClusterId)
   - template: templates/jobs/deploy-azuresqldb-job.yml
     parameters:
       environmentName: 'DEV'
       serviceConnection: 'mdwdops-serviceconnection-dev'
+      tenant-id: 'e2a315a1-b592-4c7e-b921-066f5d6ef97d'
   - template: templates/jobs/deploy-adf-job.yml
     parameters:
       environmentName: 'DEV'
