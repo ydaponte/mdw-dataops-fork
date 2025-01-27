@@ -1,0 +1,21 @@
+{
+	"name": "Ls_AzureDatabricks_01",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-4412266729871337.17.azuredatabricks.net",
+			"authentication": "MSI",
+			"workspaceResourceId": "/subscriptions/334f902c-99ae-4637-9967-767272b6922c/resourceGroups/mdwdops-tsl19-dev-rg/providers/Microsoft.Databricks/workspaces/mdwdops-dbw-dev-tsl19",
+			"newClusterNodeType": "Standard_DC4as_v5",
+			"newClusterNumOfWorker": "1",
+			"newClusterSparkEnvVars": {
+				"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+			},
+			"newClusterVersion": "13.3.x-scala2.12",
+			"clusterOption": "Fixed",
+			"newClusterInitScripts": []
+		}
+	}
+}
