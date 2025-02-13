@@ -6,7 +6,15 @@ trigger:
   paths:
     include:
     - e2e_samples/parking_sensors/*
-
+pr:
+  branches:
+    include:
+    - main
+    - releases/*
+  paths:
+    include:
+    - e2e_samples/parking_sensors/adf/*
+    
 variables:
   basePath: 'e2e_samples/parking_sensors'
   pythonWorkingDir: '$(basePath)/src/ddo_transform'
