@@ -1,0 +1,20 @@
+{
+	"name": "Ls_AzureDatabricks_01",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-1632881326802869.9.azuredatabricks.net",
+			"accessToken": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "Ls_KeyVault_01",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "databricksToken"
+			},
+			"existingClusterId": "0213-115044-1sgh23rk"
+		}
+	}
+}
