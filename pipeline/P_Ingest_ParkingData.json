@@ -5,7 +5,7 @@
 		"activities": [
 			{
 				"name": "StandardizeData",
-				"description": "",
+				"description": "Change 13.02.2025",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
