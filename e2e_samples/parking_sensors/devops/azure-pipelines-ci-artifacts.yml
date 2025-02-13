@@ -1,24 +1,10 @@
 trigger:
-  branches:
-    include:
-    - main
-    - release/*
-  paths:
-    include:
-    - e2e_samples/parking_sensors/*
-pr:
-  branches:
-    include:
-    - main
-    - releases/*
-  paths:
-    include:
-    - e2e_samples/parking_sensors/adf/*
+- main # collaboration branch
     
 variables:
   basePath: 'e2e_samples/parking_sensors'
   pythonWorkingDir: '$(basePath)/src/ddo_transform'
-  pythonPackageMajorVersion:  1
+  pythonPackageMajorVersion:  1 
   pythonPackageMinorVersion:  1
   pythonPackagePatchVersion:  $(Build.BuildId)
   sqlDwPath: '$(basePath)/sql/ddo_azuresqldw_dw'
