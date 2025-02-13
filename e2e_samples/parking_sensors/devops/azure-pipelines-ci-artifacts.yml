@@ -1,5 +1,13 @@
-trigger:
-- main # collaboration branch
+trigger: none
+
+pr:
+  branches:
+    include:
+    - main
+    - releases/*
+  paths:
+    include:
+    - e2e_samples/parking_sensors/*
     
 variables:
   basePath: 'e2e_samples/parking_sensors'
