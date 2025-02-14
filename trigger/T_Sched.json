@@ -16,7 +16,7 @@
 			"recurrence": {
 				"frequency": "Hour",
 				"interval": 1,
-				"startTime": "2019-02-01T13:15:00",
+				"startTime": "2019-02-01T13:19:00",
 				"timeZone": "W. Europe Standard Time"
 			}
 		}
