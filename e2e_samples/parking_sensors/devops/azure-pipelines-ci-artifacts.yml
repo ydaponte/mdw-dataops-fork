@@ -1,11 +1,12 @@
-trigger: 
+trigger:
   branches:
     include:
     - main
-    - releases/*
+    - release/*
   paths:
     include:
     - e2e_samples/parking_sensors/*
+pr: none
     
 variables:
   basePath: 'e2e_samples/parking_sensors'
