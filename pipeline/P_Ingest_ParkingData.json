@@ -5,7 +5,7 @@
 		"activities": [
 			{
 				"name": "StandardizeData",
-				"description": "PR 1",
+				"description": "PR 2",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
