@@ -1,7 +1,7 @@
 {
-	"name": "P_Ingest_ParkingData",
+	"name": "P_Ingest_MelbParkingData",
 	"properties": {
-		"description": "Pipeline to Ingest Simulated Parking Data",
+		"description": "Hello from NDC Sydney!!!",
 		"activities": [
 			{
 				"name": "StandardizeData",
@@ -15,7 +15,7 @@
 						]
 					},
 					{
-						"activity": "DownloadLocationData",
+						"activity": "DownloadBayData",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,6 +42,9 @@
 						}
 					},
 					"libraries": [
+						{
+							"egg": "dbfs:/mnt/datalake/sys/databricks/libs/dev/ddo_transform-1.1.508-py2.py3-none-any.whl"
+						},
 						{
 							"pypi": {
 								"package": "applicationinsights"
@@ -108,27 +111,27 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Ds_Http_Parking_Sensors",
+						"referenceName": "Ds_Http_Parking_Bay",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Ds_AdlsGen2_ParkingData",
+						"referenceName": "Ds_AdlsGen2_MelbParkingData",
 						"type": "DatasetReference",
 						"parameters": {
 							"infilefolder": {
 								"value": "@variables('infilefolder')",
 								"type": "Expression"
 							},
-							"infilename": "ParkingSensorData.json",
+							"infilename": "MelbParkingSensorData.json",
 							"container": "datalake/data/lnd"
 						}
 					}
 				]
 			},
 			{
-				"name": "DownloadLocationData",
+				"name": "DownloadBayData",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -164,20 +167,20 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Ds_Http_Parking_Locations",
+						"referenceName": "Ds_Http_Parking_Bay_Sensors",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Ds_AdlsGen2_ParkingData",
+						"referenceName": "Ds_AdlsGen2_MelbParkingData",
 						"type": "DatasetReference",
 						"parameters": {
 							"infilefolder": {
 								"value": "@variables('infilefolder')",
 								"type": "Expression"
 							},
-							"infilename": "ParkingLocationData.json",
+							"infilename": "MelbParkingBayData.json",
 							"container": "datalake/data/lnd"
 						}
 					}
@@ -211,6 +214,9 @@
 						}
 					},
 					"libraries": [
+						{
+							"egg": "dbfs:/mnt/datalake/sys/databricks/libs/dev/ddo_transform-1.1.508-py2.py3-none-any.whl"
+						},
 						{
 							"pypi": {
 								"package": "applicationinsights"
@@ -267,7 +273,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2025-02-14T20:45:50Z"
+		"lastPublishTime": "2025-02-14T08:28:37Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
