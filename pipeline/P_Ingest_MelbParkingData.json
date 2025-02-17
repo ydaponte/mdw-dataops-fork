@@ -1,5 +1,5 @@
 {
-	"name": "P_Ingest_ParkingData",
+	"name": "P_Ingest_MelbParkingData",
 	"properties": {
 		"description": "Pipeline to Ingest Simulated Parking Data",
 		"activities": [
