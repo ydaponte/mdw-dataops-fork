@@ -1,8 +1,8 @@
-"""Tests for ADF pipeline: process_covid_results"""
+"""Tests for ADF pipeline: process_parking_results"""
 
 import pytest
 
-PIPELINE_NAME = "P_Ingest_MelbParkingData"
+PIPELINE_NAME = "P_Ingest_ParkingData"
 
 
 def test_pipeline_succeeded(adf_pipeline_run, sql_connection):
