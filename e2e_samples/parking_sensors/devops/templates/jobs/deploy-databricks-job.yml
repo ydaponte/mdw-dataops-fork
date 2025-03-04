@@ -112,7 +112,7 @@ jobs:
             #databricks workspace import --language PYTHON --overwrite --file "./databricks/libs/ddo_transform-localdev-py2.py3-none-any.whl" "$databricks_release_libs_path/ddo_transform-localdev-py2.py3-none-any.whl"
             databricks workspace import --language PYTHON --format AUTO --overwrite --file "${WHEEL_FILE_PATH}/${WHEEL_FILE_NAME}" "$databricks_release_libs_path/ddo_transform-localdev-py2.py3-none-any.whl"
 
-            echo "Uploading notebooks at ${NOTEBOOKS_PATH} to workspace (${databricks_release_path})..."
+            echo "Uploading notebooks at ${NOTEBOOKS_PATH} to workspace (${databricks_release_notebook_path})..."
             databricks workspace import "${databricks_release_notebook_path}/00_setup" --file "${NOTEBOOKS_PATH}/00_setup.py" --format SOURCE --language PYTHON --overwrite
             databricks workspace import "${databricks_release_notebook_path}/01_explore" --file "${NOTEBOOKS_PATH}/01_explore.py" --format SOURCE --language PYTHON --overwrite
             databricks workspace import "${databricks_release_notebook_path}/02_standardize" --file "${NOTEBOOKS_PATH}/02_standardize.py" --format SOURCE --language PYTHON --overwrite
